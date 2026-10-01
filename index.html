@@ -1,0 +1,770 @@
+<title>Komala Belur Srinivas</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:        #F7F4EE;
+  --bg-2:      #ECE8DF;
+  --bg-dark:   #1B1915;
+  --fg:        #1B1915;
+  --fg-2:      #6B6158;
+  --border:    #D8D2C5;
+  --accent:    #C4790A;
+  --accent-hi: #F5A823;
+  --accent-bg: rgba(196,121,10,0.10);
+  --accent-bd: rgba(196,121,10,0.28);
+  --f-d: 'Fraunces', Georgia, serif;
+  --f-b: 'Outfit', system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #161310;
+    --bg-2:      #1E1B16;
+    --bg-dark:   #0D0B09;
+    --fg:        #EDE7DA;
+    --fg-2:      #918779;
+    --border:    #2C2820;
+    --accent:    #F5A823;
+    --accent-hi: #F5A823;
+    --accent-bg: rgba(245,168,35,0.10);
+    --accent-bd: rgba(245,168,35,0.28);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #161310;
+  --bg-2:      #1E1B16;
+  --bg-dark:   #0D0B09;
+  --fg:        #EDE7DA;
+  --fg-2:      #918779;
+  --border:    #2C2820;
+  --accent:    #F5A823;
+  --accent-hi: #F5A823;
+  --accent-bg: rgba(245,168,35,0.10);
+  --accent-bd: rgba(245,168,35,0.28);
+  color-scheme: dark;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-b);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 28px; }
+
+/* ── Global keyframes ─────────────────────────────────────────────────────── */
+@keyframes blink     { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+@keyframes fadeDown  { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+@keyframes heroLine  { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:none} }
+@keyframes ticker    { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes ringPulse { 0%,100%{opacity:.07} 50%{opacity:.16} }
+@keyframes badgeGlow { 0%,100%{box-shadow:0 0 0 0 var(--accent-bg)} 50%{box-shadow:0 0 14px 3px var(--accent-bg)} }
+@keyframes floatP {
+  from { transform: translate(0, 0) rotate(0deg); opacity: var(--op, .2); }
+  to   { transform: translate(var(--dx, 20px), var(--dy, -20px)) rotate(20deg); opacity: calc(var(--op, .2) * .3); }
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes underlineSweep {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+@keyframes tagPop {
+  0%   { opacity:0; transform:translateY(10px) scale(.94); }
+  60%  { transform:translateY(-2px) scale(1.02); }
+  100% { opacity:1; transform:none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
+  .exp-card,.m-item,.skill-tag { opacity:1!important; transform:none!important; }
+  .cursor-ring { display:none!important; }
+}
+
+/* ── Scroll progress bar ──────────────────────────────────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 300;
+  transition: none;
+}
+
+/* ── Cursor ring ──────────────────────────────────────────────────────────── */
+.cursor-ring {
+  position: fixed;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  z-index: 9998;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity .35s, width .25s cubic-bezier(.34,1.56,.64,1), height .25s cubic-bezier(.34,1.56,.64,1), border-color .2s;
+  display: none;
+}
+@media (pointer: fine) { .cursor-ring { display: block; } }
+.cursor-ring.on  { opacity: .65; }
+.cursor-ring.big { width: 44px; height: 44px; border-color: var(--accent-hi); opacity: .4; }
+
+/* ── Nav ──────────────────────────────────────────────────────────────────── */
+nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  animation: fadeDown .45s ease both;
+  transition: box-shadow .3s;
+}
+nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07); }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px; }
+.nav-name {
+  font-family: var(--f-d);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  text-decoration: none;
+  position: relative;
+}
+.nav-name::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .3s ease;
+}
+.nav-name:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-right { display:flex; align-items:center; gap:20px; }
+.avail-pill {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:4px 13px; border-radius:999px;
+  border:1px solid var(--accent-bd);
+  font-size:11px; font-weight:600; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--accent); white-space:nowrap;
+}
+.avail-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:blink 2.5s ease-in-out infinite; }
+.nav-cta {
+  font-size:13px; font-weight:500; color:var(--fg-2); text-decoration:none;
+  position:relative; padding-bottom:1px;
+}
+.nav-cta::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:1px; background:var(--accent);
+  transform:scaleX(0); transform-origin:right;
+  transition:transform .25s ease;
+}
+.nav-cta:hover { color:var(--fg); }
+.nav-cta:hover::after { transform:scaleX(1); transform-origin:left; }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.hero {
+  padding-block: 96px 88px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.hero-ambient {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 65% 75% at 78% 50%, var(--accent-bg), transparent 70%);
+  background-size: 200% 200%;
+  animation: gradientShift 10s ease-in-out infinite;
+}
+.hero-deco {
+  position: absolute; right: -40px; top: 50%;
+  transform: translateY(-50%);
+  width: min(44vw, 460px); height: min(44vw, 460px);
+  pointer-events: none; color: var(--accent); opacity: .55;
+}
+.hero-deco circle { animation: ringPulse 7s ease-in-out infinite; }
+.hero-deco circle:nth-child(2) { animation-delay: -2.3s; }
+.hero-deco circle:nth-child(3) { animation-delay: -4.6s; }
+.hero-deco circle:nth-child(4) { animation-delay: -1.2s; }
+
+/* Particles live in .hero, injected by JS */
+.particle {
+  position: absolute; border-radius: 50%;
+  background: var(--accent); pointer-events: none;
+  animation: floatP var(--dur,4s) ease-in-out var(--delay,0s) infinite alternate;
+}
+@media (max-width: 720px) { .particle { display: none; } }
+
+.hero-content { position: relative; z-index: 1; }
+.hero-grid { display:grid; grid-template-columns:1fr 210px; gap:56px; align-items:end; }
+.hero-h1 {
+  font-family: var(--f-d);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  margin-bottom: 28px;
+}
+.hero-h1 em { font-style:italic; font-weight:300; color:var(--accent); }
+.h-l1 { display:block; animation:heroLine .65s cubic-bezier(.16,1,.3,1) .05s both; }
+.h-l2 { display:block; animation:heroLine .65s cubic-bezier(.16,1,.3,1) .2s  both; }
+.h-l3 { display:block; animation:heroLine .65s cubic-bezier(.16,1,.3,1) .38s both; }
+
+/* animated underline on "prove it." */
+.hero-ul {
+  position: relative; display: inline-block;
+}
+.hero-ul::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .9s cubic-bezier(.16,1,.3,1) 1.1s;
+}
+.hero-ul.ul { transform-origin: left; }
+.hero-ul.ul::after { transform: scaleX(1); }
+
+.hero-sub { font-size:17px; color:var(--fg-2); line-height:1.75; font-weight:300; max-width:500px; animation:heroLine .65s cubic-bezier(.16,1,.3,1) .55s both; }
+.hero-aside { display:flex; flex-direction:column; gap:28px; padding-left:32px; border-left:1px solid var(--border); animation:heroLine .65s cubic-bezier(.16,1,.3,1) .7s both; }
+.aside-stat-val { font-family:var(--f-d); font-size:38px; font-weight:600; line-height:1; letter-spacing:-0.04em; color:var(--accent); font-variant-numeric:tabular-nums; }
+.aside-stat-lbl { font-size:12px; color:var(--fg-2); margin-top:5px; line-height:1.4; }
+
+/* ── Metrics ──────────────────────────────────────────────────────────────── */
+.metrics { background: var(--bg-dark); }
+.metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); }
+.m-item {
+  padding:52px 28px;
+  border-right:1px solid rgba(255,255,255,.07);
+  opacity:0; transform:translateY(20px) scale(.97);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.16,1,.3,1);
+}
+.m-item.in { opacity:1; transform:none; }
+.m-item:last-child { border-right:none; }
+.m-val { font-family:var(--f-d); font-size:clamp(34px,4vw,54px); font-weight:700; letter-spacing:-0.04em; line-height:1; color:var(--accent-hi); font-variant-numeric:tabular-nums; }
+.m-lbl { font-size:12px; color:rgba(255,255,255,.38); margin-top:10px; line-height:1.5; font-weight:300; }
+
+/* ── Ticker ───────────────────────────────────────────────────────────────── */
+.ticker-section {
+  background:var(--bg-dark);
+  border-top:1px solid rgba(255,255,255,.05);
+  overflow:hidden; padding-block:16px; position:relative;
+}
+.ticker-section::before,.ticker-section::after {
+  content:''; position:absolute; top:0; bottom:0; width:80px; z-index:2; pointer-events:none;
+}
+.ticker-section::before { left:0; background:linear-gradient(to right,var(--bg-dark),transparent); }
+.ticker-section::after  { right:0; background:linear-gradient(to left,var(--bg-dark),transparent); }
+.ticker-track {
+  display:flex; width:max-content;
+  animation:ticker 32s linear infinite;
+}
+.ticker-track:hover { animation-play-state:paused; }
+.ticker-item { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.22); padding:0 28px; flex-shrink:0; user-select:none; }
+.ticker-dot { display:inline-block; width:3px; height:3px; border-radius:50%; background:var(--accent-hi); opacity:.55; vertical-align:2px; margin-right:28px; }
+
+/* ── Section label ────────────────────────────────────────────────────────── */
+.sec-label {
+  padding-top:72px; padding-bottom:44px;
+  display:flex; align-items:center; gap:16px;
+  font-size:11px; font-weight:600; letter-spacing:.20em; text-transform:uppercase; color:var(--fg-2);
+}
+.sec-label::after { content:''; height:1px; background:var(--border); width:0; max-width:100px; transition:width .9s ease .3s; }
+.sec-label.ln::after { width:100px; }
+
+/* ── Work ─────────────────────────────────────────────────────────────────── */
+.exp-section { padding-bottom:80px; }
+.exp-card {
+  display:grid; grid-template-columns:200px 1fr; gap:48px;
+  padding-block:52px; border-bottom:1px solid var(--border);
+  border-left:3px solid transparent; padding-left:20px;
+  opacity:0; transform:translateY(36px) scale(.99);
+  transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1), border-color .25s;
+}
+.exp-card.in  { opacity:1; transform:none; }
+.exp-card:hover { border-left-color:var(--accent); }
+.exp-meta { padding-top:3px; }
+.exp-org { font-size:11px; font-weight:600; letter-spacing:.10em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; line-height:1.4; }
+.exp-period { font-size:13px; color:var(--fg-2); }
+.exp-loc    { font-size:12px; color:var(--fg-2); margin-top:3px; opacity:.7; }
+.exp-role { font-family:var(--f-d); font-size:clamp(26px,3vw,36px); font-weight:600; letter-spacing:-0.025em; line-height:1.1; margin-bottom:18px; text-wrap:balance; }
+.exp-role em { font-style:italic; font-weight:300; }
+.exp-desc { font-size:15px; color:var(--fg-2); line-height:1.75; font-weight:300; max-width:560px; margin-bottom:20px; }
+.exp-badge {
+  display:inline-flex; align-items:center; gap:8px; padding:7px 14px;
+  border-radius:4px; background:var(--accent-bg); border:1px solid var(--accent-bd);
+  font-size:13px; font-weight:600; color:var(--accent); margin-bottom:20px;
+  animation:badgeGlow 3.5s ease-in-out infinite;
+}
+.exp-badge::before { content:'↑'; }
+.exp-bullets { list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:24px; }
+.exp-bullets li { font-size:14px; color:var(--fg-2); line-height:1.65; padding-left:16px; position:relative; min-width:0; }
+.exp-bullets li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--accent); }
+.exp-links { display:flex; gap:10px; flex-wrap:wrap; }
+.exp-link {
+  font-size:12px; font-weight:500; color:var(--fg-2); text-decoration:none;
+  border:1px solid var(--border); padding:5px 13px; border-radius:999px;
+  transition:color .18s, border-color .18s, transform .2s;
+  letter-spacing:.02em;
+}
+.exp-link:hover { color:var(--fg); border-color:var(--fg-2); transform:translateY(-1px); }
+
+/* ── Skills ───────────────────────────────────────────────────────────────── */
+.skills-section { background:var(--bg-2); padding-bottom:72px; }
+.skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
+.skill-cat { font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+.skill-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.skill-tag {
+  font-size:13px; color:var(--fg-2); background:var(--bg);
+  border:1px solid var(--border); padding:5px 12px; border-radius:4px;
+  opacity:0; transform:translateY(10px) scale(.94);
+  transition:border-color .18s, color .18s, transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s ease, box-shadow .18s;
+}
+.skill-tag.in { opacity:1; transform:none; }
+.skill-tag.in:hover { color:var(--fg); border-color:var(--accent-bd); transform:translateY(-2px); box-shadow:0 4px 12px var(--accent-bg); }
+
+/* ── Contact ──────────────────────────────────────────────────────────────── */
+.contact-section { padding-block:96px; position:relative; overflow:hidden; }
+.contact-deco { position:absolute; left:-60px; bottom:-60px; width:320px; height:320px; pointer-events:none; color:var(--accent); opacity:.15; }
+.contact-deco circle { animation:ringPulse 8s ease-in-out infinite; }
+.contact-deco circle:nth-child(2) { animation-delay:-2.7s; }
+.contact-h { font-family:var(--f-d); font-size:clamp(40px,5.5vw,72px); font-weight:700; letter-spacing:-0.035em; line-height:1.0; margin-bottom:40px; text-wrap:balance; position:relative; z-index:1; }
+.contact-h em { font-style:italic; font-weight:300; color:var(--accent); }
+.contact-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:relative; z-index:1; }
+.contact-addr { font-family:var(--f-d); font-size:22px; font-weight:300; letter-spacing:-0.01em; color:var(--fg); text-decoration:none; border-bottom:1px solid var(--accent); padding-bottom:1px; transition:opacity .18s; }
+.contact-addr:hover { opacity:.65; }
+.copy-btn { font-size:12px; font-weight:500; font-family:var(--f-b); color:var(--fg-2); background:none; border:1px solid var(--border); padding:7px 15px; border-radius:4px; cursor:pointer; transition:color .18s, border-color .18s, transform .2s; }
+.copy-btn:hover { color:var(--fg); border-color:var(--fg-2); transform:translateY(-1px); }
+.contact-socials { display:flex; gap:20px; margin-top:28px; flex-wrap:wrap; position:relative; z-index:1; }
+.contact-social { font-size:13px; font-weight:500; color:var(--fg-2); text-decoration:none; transition:color .18s, transform .2s; display:inline-block; }
+.contact-social:hover { color:var(--fg); transform:translateY(-1px); }
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+footer { border-top:1px solid var(--border); padding-block:24px; }
+.foot-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--fg-2); }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .hero-deco,.contact-deco { display:none; }
+  .hero-grid { grid-template-columns:1fr; }
+  .hero-aside { flex-direction:row; flex-wrap:wrap; padding-left:0; border-left:none; border-top:1px solid var(--border); padding-top:32px; gap:28px; }
+  .metrics-grid { grid-template-columns:repeat(2,1fr); }
+  .m-item { border-bottom:1px solid rgba(255,255,255,.07); }
+  .m-item:nth-child(2n) { border-right:none; }
+  .m-item:nth-child(4) { border-bottom:none; }
+  .exp-card { grid-template-columns:1fr; gap:12px; padding-left:16px; }
+  .exp-meta { display:flex; gap:16px; align-items:baseline; flex-wrap:wrap; }
+  .exp-org { margin-bottom:0; }
+  .skills-grid { grid-template-columns:1fr; gap:24px; }
+  .nav-right .avail-pill { display:none; }
+}
+</style>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+<!-- Cursor ring -->
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ─── Nav ────────────────────────────────────────────────────────────────-->
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="nav-name">Komala Belur Srinivas</a>
+    <div class="nav-right">
+      <div class="avail-pill"><div class="avail-dot"></div>Open to internships</div>
+      <a href="#contact" class="nav-cta">Get in touch &rarr;</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Hero ───────────────────────────────────────────────────────────────-->
+<section class="hero" id="hero">
+  <div class="hero-ambient"></div>
+  <svg class="hero-deco" viewBox="0 0 460 460" fill="none" aria-hidden="true">
+    <circle cx="230" cy="230" r="220" stroke="currentColor" stroke-width=".8"/>
+    <circle cx="230" cy="230" r="170" stroke="currentColor" stroke-width=".8"/>
+    <circle cx="230" cy="230" r="120" stroke="currentColor" stroke-width="1"/>
+    <circle cx="230" cy="230" r="70"  stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="230" cy="230" r="4"   fill="currentColor" opacity=".5"/>
+  </svg>
+
+  <div class="wrap hero-content">
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-h1">
+          <span class="h-l1">I grow audiences.</span>
+          <span class="h-l2">The numbers</span>
+          <span class="h-l3"><em><span class="hero-ul">prove it.</span></em></span>
+        </h1>
+        <p class="hero-sub">
+          Specializing in email automation, social media, and large-scale event marketing.
+          From 50,000-person festivals in Bengaluru to Mailchimp journeys that doubled attendance at Hofstra.
+        </p>
+      </div>
+      <div class="hero-aside">
+        <div>
+          <div class="aside-stat-val" data-count="70" data-fmt="range">60&ndash;70%</div>
+          <div class="aside-stat-lbl">lift in event<br>attendance</div>
+        </div>
+        <div>
+          <div class="aside-stat-val" data-count="10000" data-suffix="+">10k+</div>
+          <div class="aside-stat-lbl">contacts managed<br>via Mailchimp</div>
+        </div>
+        <div>
+          <div class="aside-stat-val" data-count="50000" data-fmt="k">50k</div>
+          <div class="aside-stat-lbl">live event<br>footfall</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Metrics ────────────────────────────────────────────────────────────-->
+<section class="metrics">
+  <div class="wrap">
+    <div class="metrics-grid">
+      <div class="m-item"><div class="m-val">60&ndash;70%</div><div class="m-lbl">RSVP &amp; attendance lift<br>via email automation</div></div>
+      <div class="m-item"><div class="m-val" data-count="10000" data-suffix="+">10,000+</div><div class="m-lbl">Email contacts managed<br>and automated</div></div>
+      <div class="m-item"><div class="m-val" data-count="50000">50,000</div><div class="m-lbl">Live footfall at Anaadyanta<br>built from scratch</div></div>
+      <div class="m-item"><div class="m-val">3+</div><div class="m-lbl">Brands grown across<br>Instagram &amp; LinkedIn</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Ticker ──────────────────────────────────────────────────────────────-->
+<div class="ticker-section" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">Email Automation</span><span class="ticker-item"><span class="ticker-dot"></span>Social Media Marketing</span><span class="ticker-item">Event Planning</span><span class="ticker-item"><span class="ticker-dot"></span>Mailchimp</span><span class="ticker-item">Content Strategy</span><span class="ticker-item"><span class="ticker-dot"></span>Sponsorship Outreach</span><span class="ticker-item">Canva</span><span class="ticker-item"><span class="ticker-dot"></span>Community Building</span><span class="ticker-item">Campaign Analytics</span><span class="ticker-item"><span class="ticker-dot"></span>Audience Segmentation</span><span class="ticker-item">Brand Strategy</span><span class="ticker-item"><span class="ticker-dot"></span>Digital Marketing</span>
+    <span class="ticker-item">Email Automation</span><span class="ticker-item"><span class="ticker-dot"></span>Social Media Marketing</span><span class="ticker-item">Event Planning</span><span class="ticker-item"><span class="ticker-dot"></span>Mailchimp</span><span class="ticker-item">Content Strategy</span><span class="ticker-item"><span class="ticker-dot"></span>Sponsorship Outreach</span><span class="ticker-item">Canva</span><span class="ticker-item"><span class="ticker-dot"></span>Community Building</span><span class="ticker-item">Campaign Analytics</span><span class="ticker-item"><span class="ticker-dot"></span>Audience Segmentation</span><span class="ticker-item">Brand Strategy</span><span class="ticker-item"><span class="ticker-dot"></span>Digital Marketing</span>
+  </div>
+</div>
+
+<!-- ─── Work ────────────────────────────────────────────────────────────────-->
+<section class="exp-section">
+  <div class="wrap">
+    <div class="sec-label">Work</div>
+
+    <article class="exp-card">
+      <div class="exp-meta">
+        <div class="exp-org">Institute of Innovation<br>&amp; Entrepreneurship<br>Hofstra University</div>
+        <div class="exp-period">Jul 2025 &ndash; May 2026</div>
+        <div class="exp-loc">Hempstead, NY</div>
+      </div>
+      <div>
+        <h2 class="exp-role">Marketing &amp; Program<br><em>Support Intern</em></h2>
+        <p class="exp-desc">Owned the full digital marketing stack for Hofstra's entrepreneurship institute: rebuilt the website from the ground up, automated the email pipeline, and managed social across two channels.</p>
+        <div class="exp-badge">60&ndash;70% lift in RSVP and event attendance</div>
+        <ul class="exp-bullets">
+          <li>Redesigned and relaunched the institute website, mapping the user journey from discovery through event registration to maximize conversions</li>
+          <li>Managed email marketing via Mailchimp across a 10,000+ contact list; designed automated welcome sequences and event campaigns that lifted RSVP rates by 60&ndash;70%</li>
+          <li>Owned cross-channel content calendars for Instagram and LinkedIn, maintaining consistent brand voice and driving program visibility for 100+ student entrepreneur events</li>
+          <li>Reported on campaign performance weekly, using engagement and attendance data to optimize send times, subject lines, and audience segments</li>
+        </ul>
+        <div class="exp-links">
+          <a href="https://www.instagram.com/hofentr/" target="_blank" rel="noopener" class="exp-link">Instagram @hofentr &nearr;</a>
+          <a href="https://www.linkedin.com/company/hofentr/" target="_blank" rel="noopener" class="exp-link">LinkedIn @hofentr &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-card">
+      <div class="exp-meta">
+        <div class="exp-org">Nitte Meenakshi<br>Institute of Technology</div>
+        <div class="exp-period">Nov 2021 &ndash; May 2023</div>
+        <div class="exp-loc">Bengaluru, India</div>
+      </div>
+      <div>
+        <h2 class="exp-role">Student Council &amp;<br><em>Marketing Head</em></h2>
+        <p class="exp-desc">Built the entire marketing engine for Anaadyanta from scratch. Owned every channel: content strategy, Canva design, sponsorship outreach, and on-ground promotion for a festival that drew 50,000 people.</p>
+        <div class="exp-badge">50,000 footfall, built from zero</div>
+        <ul class="exp-bullets">
+          <li>Developed and executed the full social media strategy for Anaadyanta across Instagram and LinkedIn, growing the audience and driving attendance from scratch to 50,000 attendees</li>
+          <li>Designed all festival promotional materials in Canva: posters, digital banners, event countdown assets, and sponsor collateral, keeping a tight visual identity across print and digital</li>
+          <li>Built and delivered sponsorship pitch decks that secured brand partners for the fest, covering production costs and adding credibility to the event</li>
+          <li>Led the Student Council as Head, coordinating with faculty, vendors, and 300+ volunteers across a two-day event</li>
+        </ul>
+        <div class="exp-links">
+          <a href="https://www.instagram.com/anaadyanta/" target="_blank" rel="noopener" class="exp-link">Instagram @anaadyanta &nearr;</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-card">
+      <div class="exp-meta">
+        <div class="exp-org">Hofstra University<br>International Office</div>
+        <div class="exp-period">Aug 2024 &ndash; Present</div>
+        <div class="exp-loc">Hempstead, NY</div>
+      </div>
+      <div>
+        <h2 class="exp-role">Global <em>Mentor</em></h2>
+        <p class="exp-desc">Developed orientation communications and community content for Hofstra's international student population, helping the university build a more connected, welcoming campus experience.</p>
+        <ul class="exp-bullets">
+          <li>Created and distributed orientation communications for 200+ incoming international students, covering housing, academics, and campus resources</li>
+          <li>Produced social media content for the international student body, growing community engagement across channels</li>
+          <li>Ran peer-to-peer mentorship touchpoints throughout the academic year, acting as the student voice between newcomers and university staff</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="exp-card">
+      <div class="exp-meta">
+        <div class="exp-org">Under 25 Summit<br>&amp; Team Horus</div>
+        <div class="exp-period">2021 &ndash; 2023</div>
+        <div class="exp-loc">India</div>
+      </div>
+      <div>
+        <h2 class="exp-role">Event &amp; Sponsorship<br><em>Marketing</em></h2>
+        <p class="exp-desc">Two roles, one through line: driving registrations and securing sponsorships. First at Under 25 Summit, one of India's largest youth conferences, and then for Team Horus, a competitive solar EV racing team.</p>
+        <ul class="exp-bullets">
+          <li>Developed and ran digital registration campaigns for Under 25 Summit, using social media and content marketing to convert awareness into sign-ups at scale</li>
+          <li>Managed hospitality operations on the ground at the summit: guest coordination, on-site execution, and end-to-end attendee experience</li>
+          <li>Developed the sponsorship strategy for Team Horus, producing pitch decks and media kits that secured brand partnerships and funding for the racing season</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ─── Skills ──────────────────────────────────────────────────────────────-->
+<section class="skills-section">
+  <div class="wrap">
+    <div class="sec-label">Skills</div>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-cat">Platforms &amp; Tools</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Mailchimp</span><span class="skill-tag">Canva</span><span class="skill-tag">Instagram</span><span class="skill-tag">LinkedIn</span><span class="skill-tag">Google Analytics</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-cat">Marketing</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Email Automation</span><span class="skill-tag">Social Media</span><span class="skill-tag">Event Marketing</span><span class="skill-tag">Sponsorship Outreach</span><span class="skill-tag">Content Strategy</span><span class="skill-tag">Campaign Analytics</span><span class="skill-tag">A/B Testing</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-cat">Operations</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Event Planning</span><span class="skill-tag">Audience Segmentation</span><span class="skill-tag">Community Building</span><span class="skill-tag">Graphic Design</span><span class="skill-tag">Public Relations</span><span class="skill-tag">Hospitality</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact ─────────────────────────────────────────────────────────────-->
+<section id="contact" class="contact-section">
+  <svg class="contact-deco" viewBox="0 0 320 320" fill="none" aria-hidden="true">
+    <circle cx="160" cy="160" r="150" stroke="currentColor" stroke-width=".8"/>
+    <circle cx="160" cy="160" r="110" stroke="currentColor" stroke-width=".8"/>
+    <circle cx="160" cy="160" r="70"  stroke="currentColor" stroke-width="1"/>
+  </svg>
+  <div class="wrap">
+    <h2 class="contact-h">Got a campaign to launch?<br><em>Let&rsquo;s make it happen.</em></h2>
+    <div class="contact-row">
+      <a href="mailto:komalsrinivas20@gmail.com" class="contact-addr">komalsrinivas20@gmail.com</a>
+      <button class="copy-btn" id="copyBtn">Copy email</button>
+    </div>
+    <div class="contact-socials">
+      <a href="https://www.linkedin.com/in/komal-b-srinivas/" target="_blank" rel="noopener" class="contact-social">LinkedIn &nearr;</a>
+      <a href="https://github.com/komala-b-srinivas" target="_blank" rel="noopener" class="contact-social">GitHub &nearr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ──────────────────────────────────────────────────────────────-->
+<footer>
+  <div class="wrap foot-inner">
+    <span>Komala Belur Srinivas &copy; 2026</span>
+    <span>Hempstead, NY &nbsp;&middot;&nbsp; Open to marketing internships</span>
+  </div>
+</footer>
+
+<script>
+const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Scroll progress bar ── */
+const bar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+  bar.style.transform = 'scaleX(' + Math.min(pct, 1) + ')';
+}, { passive: true });
+
+/* ── Nav shadow on scroll ── */
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  navEl.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── Cursor ring ── */
+const ring = document.getElementById('cursorRing');
+let cx = -100, cy = -100, tx = -100, ty = -100, rafId;
+function lerpRing() {
+  cx += (tx - cx) * 0.14;
+  cy += (ty - cy) * 0.14;
+  ring.style.left = cx + 'px';
+  ring.style.top  = cy + 'px';
+  rafId = requestAnimationFrame(lerpRing);
+}
+if (!rm) {
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    ring.classList.add('on');
+  });
+  document.addEventListener('mouseleave', () => ring.classList.remove('on'));
+  document.querySelectorAll('a,button,.skill-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('big'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('big'));
+  });
+  lerpRing();
+}
+
+/* ── Hero floating particles ── */
+if (!rm) {
+  const hero = document.getElementById('hero');
+  const configs = [
+    { x:12,y:22,s:4, dur:4.2,del:-1.1,dx:18, dy:-14,op:.22 },
+    { x:78,y:15,s:3, dur:5.5,del:-2.4,dx:-22,dy:20, op:.16 },
+    { x:30,y:72,s:5, dur:3.8,del:-0.6,dx:14, dy:-24,op:.20 },
+    { x:62,y:65,s:3, dur:6.1,del:-3.2,dx:-16,dy:-12,op:.14 },
+    { x:88,y:44,s:4, dur:4.7,del:-1.8,dx:-20,dy:16, op:.18 },
+    { x:48,y:88,s:3, dur:5.2,del:-4.1,dx:22, dy:-10,op:.14 },
+    { x:20,y:50,s:2, dur:3.5,del:-2.8,dx:-10,dy:18, op:.18 },
+    { x:70,y:32,s:2, dur:6.4,del:-0.9,dx:16, dy:-18,op:.12 },
+  ];
+  configs.forEach(c => {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `width:${c.s}px;height:${c.s}px;left:${c.x}%;top:${c.y}%;` +
+      `--dur:${c.dur}s;--delay:${c.del}s;--dx:${c.dx}px;--dy:${c.dy}px;--op:${c.op};`;
+    hero.appendChild(p);
+  });
+}
+
+/* ── Hero underline on "prove it." ── */
+setTimeout(() => {
+  document.querySelector('.hero-ul').classList.add('ul');
+}, 400);
+
+/* ── Count-up helper ── */
+function countUp(el, target, duration, fmt) {
+  if (rm) return;
+  const start = performance.now();
+  const tick = now => {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const v = Math.round(ease * target);
+    if (fmt === 'k') el.textContent = Math.round(v / 1000) + 'k';
+    else if (fmt === 'range') el.textContent = '60–70%';
+    else el.textContent = v.toLocaleString('en-US') + (el.dataset.suffix || '');
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ── Hero aside stat count-up on first view ── */
+const asideStats = document.querySelectorAll('.aside-stat-val[data-count]');
+const asideObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      countUp(el, +el.dataset.count, 1200, el.dataset.fmt);
+      asideObs.unobserve(el);
+    }
+  });
+}, { threshold: .7 });
+asideStats.forEach(el => asideObs.observe(el));
+
+/* ── Metrics count-up + reveal ── */
+const mItems = document.querySelectorAll('.m-item');
+const mObs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const idx = [...mItems].indexOf(el);
+      el.style.transitionDelay = (idx * 0.09) + 's';
+      el.classList.add('in');
+      const val = el.querySelector('[data-count]');
+      if (val) countUp(val, +val.dataset.count, 1600, val.dataset.fmt);
+      mObs.unobserve(el);
+    }
+  });
+}, { threshold: .3 });
+mItems.forEach(el => mObs.observe(el));
+
+/* ── Work card reveal ── */
+const cards = document.querySelectorAll('.exp-card');
+const cardObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = [...cards].indexOf(e.target);
+      e.target.style.transitionDelay = (idx % 2 * 0.07) + 's';
+      e.target.classList.add('in');
+      cardObs.unobserve(e.target);
+    }
+  });
+}, { threshold: .08 });
+if (!rm) cards.forEach(el => cardObs.observe(el));
+else cards.forEach(el => el.classList.add('in'));
+
+/* ── Section label line grow ── */
+const labels = document.querySelectorAll('.sec-label');
+const lnObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('ln'); lnObs.unobserve(e.target); } });
+}, { threshold: .5 });
+labels.forEach(l => lnObs.observe(l));
+
+/* ── Skill tags stagger reveal ── */
+const tags = document.querySelectorAll('.skill-tag');
+const tagObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const group = e.target.closest('.skill-tags');
+      const siblings = [...group.querySelectorAll('.skill-tag')];
+      siblings.forEach((t, i) => {
+        setTimeout(() => t.classList.add('in'), i * 55);
+      });
+      tagObs.unobserve(e.target);
+    }
+  });
+}, { threshold: .3 });
+// observe first tag in each group
+document.querySelectorAll('.skill-tags').forEach(g => {
+  const first = g.querySelector('.skill-tag');
+  if (first) tagObs.observe(first);
+});
+if (rm) tags.forEach(t => t.classList.add('in'));
+
+/* ── Copy email ── */
+document.getElementById('copyBtn').addEventListener('click', function () {
+  const btn = this;
+  navigator.clipboard.writeText('komalsrinivas20@gmail.com').then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy email'; }, 2200);
+  }).catch(() => {
+    const el = document.querySelector('.contact-addr');
+    const r = document.createRange(); r.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+  });
+});
+</script>
