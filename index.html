@@ -329,6 +329,107 @@ nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07); }
 }
 .exp-link:hover { color:var(--fg); border-color:var(--fg-2); transform:translateY(-1px); }
 
+/* ── Social Content ───────────────────────────────────────────────────────── */
+.social-section { padding-block:80px 96px; overflow:hidden; }
+.social-scroll-wrap { overflow-x:auto; padding-bottom:12px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; -webkit-overflow-scrolling:touch; }
+.social-scroll-wrap::-webkit-scrollbar { height:4px; }
+.social-scroll-wrap::-webkit-scrollbar-track { background:transparent; }
+.social-scroll-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.reel-row { display:flex; gap:18px; width:max-content; padding-inline:28px; }
+@media (max-width:680px) { .reel-row { padding-inline:16px; } }
+
+.reel-card {
+  width:220px; flex-shrink:0;
+  aspect-ratio:9/16;
+  border-radius:10px; overflow:hidden;
+  position:relative; display:flex; flex-direction:column;
+  justify-content:space-between;
+  text-decoration:none; cursor:pointer;
+  background:var(--bg-dark);
+  opacity:0; transform:translateY(24px);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+}
+.reel-card.in { opacity:1; transform:none; }
+.reel-card:hover { box-shadow:0 12px 40px rgba(0,0,0,.35); transform:translateY(-3px) scale(1.01); }
+.reel-card:hover .reel-play { transform:translate(-50%,-50%) scale(1.1); }
+
+/* Card visual background with gradient patterns */
+.reel-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background:var(--reel-grad, linear-gradient(145deg,#1f1a12 0%,#2e2619 60%,#1a1510 100%));
+  z-index:0;
+}
+.reel-card-1::before { --reel-grad: linear-gradient(155deg,#1a1208 0%,#2c1f0a 50%,#3a2510 80%,#1a1208 100%); }
+.reel-card-2::before { --reel-grad: linear-gradient(135deg,#0f1118 0%,#1a1c2e 55%,#111520 100%); }
+.reel-card-3::before { --reel-grad: linear-gradient(150deg,#130d10 0%,#221318 60%,#130d10 100%); }
+.reel-card-4::before { --reel-grad: linear-gradient(140deg,#0c1210 0%,#111e18 55%,#0c1210 100%); }
+.reel-card-5::before { --reel-grad: linear-gradient(145deg,#0e0e18 0%,#181828 60%,#0e0e18 100%); }
+
+/* Decorative glow blob per card */
+.reel-card::after {
+  content:'';
+  position:absolute;
+  width:120px; height:120px;
+  border-radius:50%;
+  background:var(--reel-glow, var(--accent));
+  opacity:.07;
+  top:30%; left:50%;
+  transform:translate(-50%,-50%);
+  filter:blur(40px);
+  z-index:0;
+  pointer-events:none;
+}
+.reel-card-1::after { --reel-glow:#F5A823; }
+.reel-card-2::after { --reel-glow:#6B9CF5; }
+.reel-card-3::after { --reel-glow:#E5618A; }
+.reel-card-4::after { --reel-glow:#5FD4A0; }
+.reel-card-5::after { --reel-glow:#A87CF5; }
+
+.reel-top {
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 14px 0;
+}
+.reel-account { font-size:11px; font-weight:600; color:rgba(255,255,255,.55); letter-spacing:.04em; }
+.reel-ig-icon { color:rgba(255,255,255,.35); width:16px; height:16px; flex-shrink:0; }
+
+.reel-play {
+  position:absolute; z-index:1;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:52px; height:52px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1), background .2s;
+}
+.reel-play svg { width:18px; height:18px; margin-left:3px; }
+
+.reel-bottom {
+  position:relative; z-index:1;
+  padding:0 14px 14px;
+}
+.reel-context {
+  font-size:11px; color:rgba(255,255,255,.45); line-height:1.4;
+  margin-bottom:10px; font-weight:300;
+}
+.reel-metrics {
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.reel-metric { display:flex; align-items:center; gap:4px; color:rgba(255,255,255,.7); font-size:12px; font-weight:500; }
+.reel-metric svg { width:12px; height:12px; opacity:.6; flex-shrink:0; }
+.reel-label {
+  display:inline-block;
+  font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.1);
+  padding:3px 8px; border-radius:2px;
+  margin-bottom:8px;
+}
+
 /* ── Skills ───────────────────────────────────────────────────────────────── */
 .skills-section { background:var(--bg-2); padding-bottom:72px; }
 .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
@@ -547,6 +648,121 @@ footer { border-top:1px solid var(--border); padding-block:24px; }
   </div>
 </section>
 
+<!-- ─── Social Content ───────────────────────────────────────────────────────-->
+<section class="social-section">
+  <div class="wrap">
+    <div class="sec-label">Social Content</div>
+  </div>
+  <div class="social-scroll-wrap">
+    <div class="reel-row">
+
+      <!-- Reel 1: Hofstra @hofentr — 1,665 views -->
+      <a class="reel-card reel-card-1" href="https://www.instagram.com/reel/DW1n7BYjEBj/" target="_blank" rel="noopener">
+        <div class="reel-top">
+          <span class="reel-account">@hofentr</span>
+          <svg class="reel-ig-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="reel-play">
+          <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.9)" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="reel-bottom">
+          <span class="reel-label">Hofstra · NYC</span>
+          <div class="reel-context">Entrepreneurship &amp; Activities Council</div>
+          <div class="reel-metrics">
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              1,665
+            </span>
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              74
+            </span>
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              7
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Reel 2: Hofstra @hofentr — 1,299 views -->
+      <a class="reel-card reel-card-2" href="https://www.instagram.com/hofentr/reels/" target="_blank" rel="noopener">
+        <div class="reel-top">
+          <span class="reel-account">@hofentr</span>
+          <svg class="reel-ig-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="reel-play">
+          <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.9)" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="reel-bottom">
+          <span class="reel-label">Hofstra · NYC</span>
+          <div class="reel-context">Entrepreneurship &amp; Activities Council</div>
+          <div class="reel-metrics">
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              1,299
+            </span>
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              72
+            </span>
+            <span class="reel-metric">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              11
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Reel 3: Undergrad India -->
+      <a class="reel-card reel-card-3" href="https://www.instagram.com/reel/CsieUsppiyG/" target="_blank" rel="noopener">
+        <div class="reel-top">
+          <span class="reel-account">Undergrad</span>
+          <svg class="reel-ig-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="reel-play">
+          <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.9)" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="reel-bottom">
+          <span class="reel-label">Bengaluru · India</span>
+          <div class="reel-context">Event &amp; campaign content</div>
+        </div>
+      </a>
+
+      <!-- Reel 4: Undergrad India -->
+      <a class="reel-card reel-card-4" href="https://www.instagram.com/reel/CsY1I3Xpdgj/" target="_blank" rel="noopener">
+        <div class="reel-top">
+          <span class="reel-account">Undergrad</span>
+          <svg class="reel-ig-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="reel-play">
+          <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.9)" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="reel-bottom">
+          <span class="reel-label">Bengaluru · India</span>
+          <div class="reel-context">Event &amp; campaign content</div>
+        </div>
+      </a>
+
+      <!-- Reel 5: Undergrad India -->
+      <a class="reel-card reel-card-5" href="https://www.instagram.com/reel/Cr_RDCwp-9g/" target="_blank" rel="noopener">
+        <div class="reel-top">
+          <span class="reel-account">Undergrad</span>
+          <svg class="reel-ig-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="reel-play">
+          <svg viewBox="0 0 24 24" fill="rgba(255,255,255,.9)" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="reel-bottom">
+          <span class="reel-label">Bengaluru · India</span>
+          <div class="reel-context">Event &amp; campaign content</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
 <!-- ─── Skills ──────────────────────────────────────────────────────────────-->
 <section class="skills-section">
   <div class="wrap">
@@ -756,6 +972,20 @@ document.querySelectorAll('.skill-tags').forEach(g => {
   if (first) tagObs.observe(first);
 });
 if (rm) tags.forEach(t => t.classList.add('in'));
+
+/* ── Reel cards scroll-in ── */
+const reelCards = document.querySelectorAll('.reel-card');
+const reelObs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const idx = [...reelCards].indexOf(e.target);
+      setTimeout(() => e.target.classList.add('in'), idx * 80);
+      reelObs.unobserve(e.target);
+    }
+  });
+}, { threshold: .15 });
+if (!rm) reelCards.forEach(el => reelObs.observe(el));
+else reelCards.forEach(el => el.classList.add('in'));
 
 /* ── Copy email ── */
 document.getElementById('copyBtn').addEventListener('click', function () {
